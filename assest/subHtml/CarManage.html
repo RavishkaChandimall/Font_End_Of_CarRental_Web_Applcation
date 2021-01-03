@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>car Manage</title>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="../framwork/bootstrap.css" rel="stylesheet">
+    <style>
+
+        .container-fluid{
+            background-image:url("../images/top_bg.png") ;
+            height: 160vh;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 mt-5">
+            <form id="carForm">
+<h2>Rent Request</h2>
+                <div class="form-group">
+                    <label for="carid">car id</label>
+                    <input class="form-control" id="carid" name="name" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="carmodel">car model</label>
+                    <input class="form-control" id="carmodel" name="address" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="cartype">car typefreemileage</label>
+                    <input class="form-control" id="cartype" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="carfule">car fule</label>
+                    <input class="form-control" id="carfule" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="carfreemileage">car freemileage</label>
+                    <input class="form-control" id="carfreemileage" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="regno">car regno</label>
+                    <input class="form-control" id="regno" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="noofps">car no of passengers</label>
+                    <input class="form-control" id="noofps" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="colore">car colour</label>
+                    <input class="form-control" id="colore" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="formonth">car for month </label>
+                    <input class="form-control" id="formonth" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="forday">car for day </label>
+                    <input class="form-control" id="forday" name="salary" type="text">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="btnSave" type="button">Save car</button>
+                    <button class="btn btn-primary" id="btnUpdate" type="button">Update car</button>
+                    <button class="btn btn-danger" id="btnDelete" type="button">Delete car</button>
+                    <button class="btn btn-warning" id="btnClear" type="button">Clear</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <table class="table table-bordered table-hover">
+                <thead class="bg-danger text-white">
+                <tr>
+                    <th>ID</th>
+                    <th>model</th>
+                    <th>cartype</th>
+                    <th>fuletype</th>
+                    <th>freemileage</th>
+                    <th>regno</th>
+                    <th>passengers</th>
+                    <th>colore</th>
+
+                </tr>
+                </thead>
+                <tbody id="tblcar">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="../lib/bootstrap.min.js"></script>
+<script>
+
+    // sending data through json format
+    $("#btnSave").click(function () {
+
+        let id = $("#carid").val();
+        let model = $("#carmodel").val();
+        let type = $("#cartype").val();
+        let fule = $("#carfule").val();
+        let free = $("#carfreemileage").val();
+        let regno = $("#regno").val();
+        let noofps = $("#noofps").val();
+        let colour = $("#colore").val();
+        let formonth = $("#formonth").val();
+        let forday = $("#forday").val();
+
+        $.ajax({
+            method: "post",
+            url: "http://localhost:8080/CarRental/api/v1/car",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": id,
+                "model": model,
+                "type": type,
+                "fule": fule,
+                "freemileage":free,
+                "regno":regno,
+                "noOfPassengers":noofps,
+                "colour":colour,
+                "formonth":formonth,
+                "forday":forday
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("car Added");
+                } else {
+                    alert(res.data);
+                }
+                loadAllcars();
+
+            }
+        });
+
+    });
+
+
+    $("#btnClear").click(function () {
+        loadAllcars();
+        var currentdate = new Date();
+        var datetime = "Last Sync: " + currentdate.getDate() + "/"
+            + (currentdate.getMonth()+1)  + "/"
+            + currentdate.getFullYear() + " @ "
+            + currentdate.getHours() + ":"
+            + currentdate.getMinutes() + ":"
+            + currentdate.getSeconds();
+        $("#rdate")
+    });
+
+    loadAllcars();
+
+    function loadAllcars() {
+        $("#tblcar").empty();
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/car",
+            dataType: 'json',
+            success: function (res) {
+                let data = res.data;
+                for (var i in data) {
+                    let id = data[i].id;
+                    let model = data[i].model;
+                    let type = data[i].type;
+                    let fule = data[i].fule;
+                    let freemileage = data[i].freemileage;
+                    let regno = data[i].regno;
+                    let no = data[i].noOfPassengers;
+                    let colour = data[i].colour;
+
+                    var row = `<tr><td>${id}</td><td>${model}</td><td>${type}</td><td>${fule}</td><td>${freemileage}</td><td>${regno}</td><td>${no}</td><td>${colour}</td></tr>`;
+                    $("#tblcar").append(row);
+
+                }
+            }
+        });
+    }
+
+
+    //search car
+    $("#carID").on('keypress', function (e) {
+        if (e.code == "Enter") {
+            let carID = $("#carID").val();
+            $.ajax({
+                url: "http://localhost:8080/CarRental/api/v1/car/" + carID,
+                success: function (res) {
+                    console.log(res);
+                    let car = res.data;
+                    // set details to input fields
+                    $("#carID").val(car.id);
+                    $("#carName").val(car.name);
+                    $("#carAddress").val(car.address);
+                    $("#carSalary").val(car.salary);
+
+                }
+            });
+        }
+    });
+
+
+    $("#btnUpdate").click(function () {
+        let id = $("#carID").val();
+        let name = $("#carName").val();
+        let address = $("#carAddress").val();
+        let salary = $("#carSalary").val();
+
+        $.ajax({
+            method: "put",
+            url: "http://localhost:8080/CarRental/api/v1/car",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": id,
+                "name": name,
+                "address": address,
+                "salary": parseInt(salary)
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("car Updated");
+                } else {
+                    alert(res.data);
+                }
+                loadAllcars();
+            }
+        });
+    });
+
+    //delete car
+    $("#btnDelete").click(function () {
+        let carID = $("#carID").val();
+        $.ajax({
+            method: "delete",
+            url: "http://localhost:8080/CarRental/api/v1/car?id=" + carID,
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("car Removed..!");
+                } else {
+                    alert(res.data);
+                }
+                loadAllcars();
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

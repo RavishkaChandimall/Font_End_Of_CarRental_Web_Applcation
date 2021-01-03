@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rent Adding</title>
+    <link href="../framwork/bootstrap.css" rel="stylesheet">
+    <style>
+
+        .container-fluid{
+            background-image:url("../images/top_bg.png") ;
+            height: 100vh;
+        }
+
+    </style>
+</head>
+<body>
+
+<table class="table table-sm table-dark">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">RentalId</th>
+        <th scope="col">CarId</th>
+        <th scope="col">Date</th>
+
+        <th scope="col">Payemnt</th>
+        <th scope="col">timerange</th>
+        <th scope="col">Status</th>
+        <th scope="col">CusId</th>
+
+    </tr>
+    </thead>
+    <tbody id="body">
+
+    </tbody>
+</table>
+<button class="btn btn-success" type="button"id="addrent">Accept</button>
+<button class="btn btn-danger" type="button" id="deleterent">Delete</button>
+<button class="btn btn-danger" id="clearrent" type="button">Clear</button>
+
+
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="../lib/bootstrap.min.js"></script>
+
+<script>
+    var rentid;
+    var carid;
+    var date;
+    var ldwpayemt;
+    var payemnt;
+    var timeRange;
+    var status;
+    var cusid;
+
+
+    
+
+function set () {
+
+        rentid = $($(this).children().get(1)).text();
+        carid = $($(this).children().get(2)).text();
+        date = $($(this).children().get(3)).text();
+        ldwpayemt = $($(this).children().get(4)).text();
+        payemnt = $($(this).children().get(5)).text();
+        timeRange = $($(this).children().get(6)).text();
+        status = $($(this).children().get(7)).text();
+        cusid = $($(this).children().get(8)).text();
+
+        searchcar();
+
+    };
+    var csutomersalary;
+    var customeraddress;
+    var customername;
+    var csutomerid;
+var carobject;
+    function searchcar(e) {
+
+        let customerID = carid;
+        console.log("car eka enawa"+carid)
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/car/" + customerID,
+            success: function (res) {
+                console.log(res);
+                 carobject = res.data;
+                
+
+
+            }
+        });
+    }
+
+    var cusobject;
+
+    function loadAllReq() {
+        $("#body").empty();
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/rentreq",
+            dataType: 'json',
+            success: function (res) {
+                let data = res.data;
+                for (var i in data) {
+                    let id = data[i].rentalid;
+                    let model = data[i].carId;
+                    let type = data[i].date;
+                    let fule = data[i].ldwpayment;
+                    let freemileage = data[i].payment;
+                    let regno = data[i].timeRange;
+                    let no = data[i].status;
+                    cusobject = data[i].customer;
+
+
+                    var row = `<tr><td>"#"</td><td>${id}</td><td>${model}</td><td>${type}</td><td>${freemileage}</td><td>${regno}</td><td>${no}</td><td>${cusobject.id}</td></tr>`;
+                    $("#body").append(row);
+
+                }
+            }
+        });
+
+        $("#body tr").click(function () {
+            loadAllReq();
+            rentid = $($(this).children().get(1)).text();
+            carid = $($(this).children().get(2)).text();
+            date = $($(this).children().get(3)).text();
+            ldwpayemt = $($(this).children().get(4)).text();
+            payemnt = $($(this).children().get(5)).text();
+            timeRange = $($(this).children().get(6)).text();
+            status = $($(this).children().get(7)).text();
+            cusid = $($(this).children().get(8)).text();
+
+            console.log(rentid,carid,cusobject)
+
+            searchcar();
+        });
+    }
+
+
+    $("#clearrent").click(function (e) {
+        loadAllReq();
+        set();
+
+
+    });
+    $(document).ready(function (e) {
+        loadAllReq();
+        set();
+    })
+
+    $("#addrent").click(function (e) {
+        $.ajax({
+            method: "post",
+            url: "http://localhost:8080/CarRental/api/v1/rent",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": rentid,
+                "Discription": status,
+                "date": date,
+                "status": status,
+                "time":timeRange,
+                "carId":carobject,
+                "cusid":cusobject,
+                "rpid":{"PID":rentid+date,"date":date,"payment":payemnt}
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("rent Added");
+                } else {
+                    alert(res.data);
+                }
+
+
+            }
+        });
+    })
+
+    $("#body tr").click(function (e) {
+        Console.log("disti didin");
+    });
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="../framwork/bootstrap.css">
+    <style>
+        a {
+            height: 67%;
+            width: 50%;
+            position: absolute;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            margin: auto;
+        }
+    </style>
+    <style>
+
+        .container-fluid{
+            background-image:url("../images/top_bg.png") ;
+            height: 100vh;
+        }
+
+    </style>
+
+</head>
+<body>
+<section class="a">
+    <section class="container-fluid" style="align-items: center">
+        <div class="row">
+            <div class="col-md-4 mt-5">
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label for="cusID">Cusotmer ID</label>
+                        <input class="form-control" id="cusID" name="id" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="cusName">Cusotmer Name</label>
+                        <input class="form-control" id="cusName" name="name" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="cusAddress">Cusotmer Address</label>
+                        <input class="form-control" id="cusAddress" name="address" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="cusSalary">Cusotmer Salary</label>
+                        <input class="form-control" id="cusSalary" name="salary" type="text">
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="btnSave" type="button">register</button>
+                        <button class="btn btn-dark" id="cancel" type="button" ><a href="../index.html"> Cancel</a></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</section>
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="../lib/bootstrap.min.js"></script>
+<script>
+    $("#btnSave").click(function () {
+
+        let id = $("#cusID").val();
+        let name = $("#cusName").val();
+        let address = $("#cusAddress").val();
+        let salary = $("#cusSalary").val();
+
+        $.ajax({
+            method: "post",
+            url: "http://localhost:8080/CarRental/api/v1/customer",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": id,
+                "name": name,
+                "address": address,
+                "salary": parseInt(salary)
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("Registerd!");
+                } else {
+                    alert(res.data);
+                }
+
+
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

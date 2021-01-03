@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Driver Manage</title>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="../framwork/bootstrap.css" rel="stylesheet">
+    <style>
+
+        .container-fluid{
+            background-image:url("../images/top_bg.png") ;
+            height: 100vh;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 mt-5">
+            <form id="DriverForm">
+                <div class="form-group">
+                    <label for="DriID">Driver ID</label>
+                    <input class="form-control" id="DriID" name="id" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="DriName">Driver Name</label>
+                    <input class="form-control" id="DriName" name="name" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="DriAddress">Driver Address</label>
+                    <input class="form-control" id="DriAddress" name="address" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="DriSalary">Driver Salary</label>
+                    <input class="form-control" id="DriSalary" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="dsid">Driver Salary</label>
+                    <input class="form-control" id="dsid" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="dsstatus">Driver Salary</label>
+                    <input class="form-control" id="dsstatus" name="salary" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="dsdate">Driver Salary</label>
+                    <input class="form-control" id="dsdate" name="salary" type="text">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id="btnSave" type="button">Save Driver</button>
+                    <button class="btn btn-primary" id="btnUpdate" type="button">Update Driver</button>
+                    <button class="btn btn-danger" id="btnDelete" type="button">Delete Driver</button>
+                    <button class="btn btn-warning" id="btnClear" type="button">Clear</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-8">
+            <table class="table table-bordered table-hover">
+                <thead class="bg-danger text-white">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Salary</th>
+                </tr>
+                </thead>
+                <tbody id="tblDriver">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="lib/bootstrap.min.js"></script>
+<script>
+
+    // sending data through json format
+    $("#btnSave").click(function () {
+
+        let id = $("#DriID").val();
+        let name = $("#DriName").val();
+        let address = $("#DriAddress").val();
+        let salary = $("#DriSalary").val();
+        let sheduleid = $("#dsid").val();
+        let status = $("#dsstatus").val();
+        let date = $("#dsdate").val();
+
+        $.ajax({
+            method: "post",
+            url: "http://localhost:8080/CarRental/api/v1/driver",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": id,
+                "name": name,
+                "address": address,
+                "salary": parseInt(salary),
+                "drivershedule": {
+                    "id": sheduleid, "status": status, "date": date
+                }
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("Driver Added");
+                } else {
+                    alert(res.data);
+                }
+                loadAllDrivers();
+
+            }
+        });
+
+    });
+
+
+    $("#btnClear").click(function () {
+        loadAllDrivers();
+    });
+
+    loadAllDrivers();
+
+    function loadAllDrivers() {
+        $("#tblDriver").empty();
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/driver",
+            dataType: 'json',
+            success: function (res) {
+                let data = res.data;
+                for (var i in data) {
+                    let id = data[i].id;
+                    let name = data[i].name;
+                    let address = data[i].address;
+                    let salary = data[i].salary;
+                    console.log(id, name, address, salary);
+                    var row = `<tr><td>${id}</td><td>${name}</td><td>${address}</td><td>${salary}</td></tr>`;
+                    $("#tblDriver").append(row);
+
+                }
+            }
+        });
+    }
+
+
+    //search Driver
+    $("#DriID").on('keypress', function (e) {
+        if (e.code == "Enter") {
+            let DriverID = $("#DriID").val();
+            $.ajax({
+                url: "http://localhost:8080/CarRental/api/v1/driver/" + DriverID,
+                success: function (res) {
+                    console.log(res);
+                    let Driver = res.data;
+                    // set details to input fields
+                    $("#DriID").val(Driver.id);
+                    $("#DriName").val(Driver.name);
+                    $("#DriAddress").val(Driver.address);
+                    $("#DriSalary").val(Driver.salary);
+
+                }
+            });
+        }
+    });
+
+
+    $("#btnUpdate").click(function () {
+        let id = $("#DriID").val();
+        let name = $("#DriName").val();
+        let address = $("#DriAddress").val();
+        let salary = $("#DriSalary").val();
+
+        $.ajax({
+            method: "put",
+            url: "http://localhost:8080/CarRental/api/v1/driver",
+            contentType: "application/json",
+            data: JSON.stringify({
+                "id": id,
+                "name": name,
+                "address": address,
+                "salary": parseInt(salary)
+            }),
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("Driver Updated");
+                } else {
+                    alert(res.data);
+                }
+                loadAllDrivers();
+            }
+        });
+    });
+
+    //delete Driver
+    $("#btnDelete").click(function () {
+        let DriverID = $("#DriID").val();
+        $.ajax({
+            method: "delete",
+            url: "http://localhost:8080/CarRental/api/v1/driver?id=" + DriverID,
+            success: function (res) {
+                if (res.message == "Success") {
+                    alert("Driver Removed..!");
+                } else {
+                    alert(res.data);
+                }
+                loadAllDrivers();
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

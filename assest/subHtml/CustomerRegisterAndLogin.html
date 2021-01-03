@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Reg And LogIn</title>
+    <link href="../framwork/bootstrap.css" rel="stylesheet">
+    <link href="../framwork/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+        section {
+
+
+            height: 67%;
+            width: 50%;
+            position: absolute;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            margin: auto;
+        }
+    </style>
+
+</head>
+<body>
+<section id="ttt">
+    <form>
+        <div class="form-group">
+            <label for="cusid">Nicno/Lno</label>
+            <input aria-describedby="emailHelp" class="form-control" id="cusID" type="email">
+            <small class="form-text text-muted" id="emailHelp">We'll never share your Details with anyone else.</small>
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Name</label>
+            <input class="form-control" id="exampleInputPassword1" type="password">
+        </div>
+
+
+    </form>
+    <a href="DriverManage.html"><button class="btn btn-primary" id="login" type="button">LOGIN</button></a>
+    <button class="btn btn-info" style="bottom: 20px;" type="button" ><a href="CutomerRegister.html"> register</a></button>
+    <a href="Rent.html"><button class="btn btn-info" style="bottom: 20px;display: none" type="button" id="clickbtn">Info</button></a>
+    <a href="AdminPanel.html"><button class="btn btn-info" style="bottom: 20px;display: none" type="button" id="admin">Admin Panel</button></a>
+
+</section>
+
+
+
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="../lib/bootstrap.min.js"></script>
+
+<script>
+    $("#login").click(function () {
+
+
+        var customerID = $("#cusID").val()
+        var password = $("#exampleInputPassword1").val();
+
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/customer/" + customerID,
+            success: function (res) {
+                console.log(res);
+                let customer = res.data;
+                if (customer.id == customerID ) {
+                    console.log("logok");
+
+                    $("#clickbtn").click();
+                    alert("Welcome Customer!")
+                }else{
+
+                }
+
+
+            }
+        });
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/admin/" + customerID,
+            success: function (res) {
+                console.log(res);
+                let customer = res.data;
+                if (customer.id == customerID ) {
+                    console.log("logok andmin");
+
+                    $("#admin").click();
+                    alert("Welcome Admin!")
+                }else{
+
+                }
+
+
+            }
+        });
+
+    })
+
+
+</script>
+</body>
+
+
+</html>

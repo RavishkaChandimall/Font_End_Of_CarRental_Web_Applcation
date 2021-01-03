@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link href="../framwork/bootstrap.css" rel="stylesheet">
+    <style>
+
+        .container-fluid {
+            background-image: url("../images/top_bg.png");
+            height: 100vh;
+        }
+
+    </style>
+    <style>
+
+        .container-fluid{
+            background-image:url("../images/top_bg.png") ;
+            height: 100vh;
+        }
+
+    </style>a
+
+</head>
+<body>
+<section class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler"
+                data-target="#navbarTogglerDemo03" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#" style="font-family: fantasy;color: darkslategrey;font-size: xx-large;">Admin
+            Panel</a>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="font-family: cursive;">
+                <li class="nav-item active" id="n1">
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+
+                <li class="nav-item" id="n2">
+                    <a class="nav-link" href="#" tabindex="-1">Customer</a>
+                </li>
+
+
+                <li class="nav-item" id="n3">
+                    <a class="nav-link " href="#" tabindex="-1">Car</a>
+                </li>
+
+                <li class="nav-item" id="n4">
+                    <a class="nav-link " href="#" tabindex="-1">Req</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="button"><a href="../index.html"> logout</a>
+                </button>
+            </form>
+
+        </div>
+
+    </nav>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-2 col-xl-2 mb-4"
+         style="display: contents; width: 20rem;font-family: cursive">
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action active" href="#" id="main">Dashboard</a>
+            <a class="list-group-item list-group-item-action" href="CustomerManage.html" id="Customer">Customers </a>
+            <a class="list-group-item list-group-item-action" href="CarManage.html" id="item">Car </a>
+            <a class="list-group-item list-group-item-action" href="Rent.html" id="Req">Req </a>
+        </div>
+    </div>
+    <section class="container-fluid">
+        <div class="container" id="eka">
+            <div class="row">
+                <div class="col">
+                    <div class="card text-white bg-primary mb-3" style="max-width: 30rem;">
+                        <div class="card-header">Req</div>
+                        <div class="w-auto p-3" style="background-color: #006d8b;align-self: center;">
+                            <div class="card" style="width: 27rem;">
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-secondary mb-3" style="max-width: 30rem;">
+                        <div class="card-header">Car</div>
+                        <div class="w-auto p-3" style="background-color: #006d8b;align-self: center;">
+                            <div class="card" style="width: 27rem;">
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="card text-white bg-success mb-3" style="max-width: 30rem;">
+                        <div class="card-header">Customer</div>
+                        <div class="w-auto p-3" style="background-color: #006d8b;align-self: center;">
+                            <div class="card" style="width: 27rem;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-white bg-danger mb-3" style="max-width: 30rem;">
+                        <a href=""> <div class="card-header">Others</div>
+                        <div class="w-auto p-3" style="background-color: #006d8b;align-self: center;">
+                            <div class="card" style="width: 27rem;">
+
+                            </div>
+                        </div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+
+<script src="../lib/jquery-3.5.1.min.js"></script>
+<script src="../lib/bootstrap.bundle.js"></script>
+<script src="../lib/bootstrap.min.js"></script>
+
+<script>
+    $("#btnClear").click(function () {
+        loadAllreq();
+    });
+
+    loadAllreq();
+
+    function loadAllreq() {
+        $("#tblCustomer").empty();
+        $.ajax({
+            url: "http://localhost:8080/CarRental/api/v1/rentreq",
+            dataType: 'json',
+            success: function (res) {
+                let data = res.data;
+                for (var i in data) {
+                    let id = data[i].id;
+                    let name = data[i].name;
+                    let address = data[i].address;
+                    let salary = data[i].salary;
+
+                    var row = `<tr><td>${id}</td><td>${name}</td><td>${address}</td><td>${salary}</td></tr>`;
+                    $("#tblCustomer").append(row);
+
+                }
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>
